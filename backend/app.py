@@ -1,11 +1,43 @@
-from flask import jsonify, request
+# from flask import Flask, render_template, request
+from flask import Flask, jsonify, request
+from pymongo import MongoClient
+from flask_cors import CORS
 from flask_pymongo import ObjectId
-from app import app, db, model, size_mapping, firm_mapping, shape_mapping, color_mapping, \
-    blemishes_mapping, soil_mapping, sun_mapping, location_mapping, fertilized_mapping, \
-    watering_mapping, pruning_mapping, pest_mapping
+
+import joblib
 import pandas as pd
 
-@app.route('/predict', methods=['POST'])
+app = Flask(__name__)
+app.config['MONGO_URI'] = 'mongodb+srv://jg-cabauatan:EIT7I1S7SCBaCJZO@itp-backend.a0fhlie.mongodb.net/db_kalamansi?retryWrites=true&w=majority' # replace this with your MongoDB Atlas connection URI
+mongo = MongoClient(app.config['MONGO_URI'])
+db = mongo.db_kalamansi # your database name
+CORS(app)  # Enable CORS for all routes
+
+
+
+@app.route('/')
+def index():
+    return 'Connected to MongoDB Atlas!'
+
+# Load the trained model
+model = joblib.load('kalamansi_logreg.pkl')
+
+# Define mapping dictionaries
+firm_mapping = {'flabby': 0, 'firm': 1}
+shape_mapping = {'oblong': 0, 'spherical': 1}
+blemishes_mapping = {'not present': 0, 'present': 1}
+fertilized_mapping = {'not fertilized': 0, 'fertilized': 1}
+watering_mapping = {'irregular': 0, 'regular': 1}
+pruning_mapping = {'not regular': 0, 'regular': 1}
+pest_mapping = {'no': 0, 'yes': 1}
+quality_mapping = {'low': 0, 'high': 1}
+size_mapping = {'small': 0, 'medium': 1, 'big': 2}
+color_mapping = {'dull yellow': 0, 'bright green': 1, 'mixed': 2}
+soil_mapping = {'loamy': 0, 'clayey': 1, 'sandy': 2}
+sun_mapping = {'full shade': 0, 'partial shade': 1, 'full sun': 2}
+location_mapping = {'patio': 0, 'balcony': 1, 'rooftop': 2}
+
+@app.route('/predict-quality', methods=['POST'])
 def predict():
     try:
         # Get input features from JSON data
@@ -76,6 +108,15 @@ def predict():
         }
         quality_id = db.quality.insert_one(quality_input).inserted_id
 
-        return jsonify({'quality_id': str(quality_id), 'predicted_quality': predicted_quality}), 200
+        # return jsonify({'quality_id': str(quality_id), 'predicted_quality': predicted_quality}), 200
+        # Retrieve the inserted data from the database
+        newQuality = db.quality.find_one({'_id': quality_id}, {'_id': 0})
+
+        return jsonify({'inserted_data': newQuality}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
