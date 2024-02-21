@@ -167,6 +167,9 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import "./App.css";
+import Header from './Components/Layout/Header';
+import Home from './Components/Home';
 import PredictQuality from './Components/Predict/PredictQuality';
 import QualityResult from './Components/Predict/QualityResult';
 
@@ -174,8 +177,10 @@ function App() {
   return (
     <div>
       <Router>
+      <Header />
         <Routes>
-          <Route path="/predict-quality" element={<PredictQuality />} />
+          <Route path="/" element={<Home />} exact="true" />
+          <Route path="/predict/quality" element={<PredictQuality />} />
           <Route path="/result" element={<QualityResult />} />
         </Routes>
       </Router>

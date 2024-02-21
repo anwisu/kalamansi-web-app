@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ const PredictQuality = () => {
         });
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API}/predict-quality`, jsonData, {
+            const response = await axios.post(`${process.env.REACT_APP_API}/predict/quality`, jsonData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -34,104 +34,171 @@ const PredictQuality = () => {
     };
 
     return (
-        <div>
-            <h1>Kalamansi Quality Prediction</h1>
-            <form onSubmit={handleSubmit}>
-                {/* Input fields for features */}
-                <label for="size">Size: </label>
-                <select id="size" name="size">
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="big">Big</option>
-                </select><br />
-                <label for="firmness">Firmness: </label>
-                <select id="firmness" name="firmness">
-                    <option value="flabby">Flabby</option>
-                    <option value="firm">Firm</option>
-                </select><br />
-                <label for="shape">Shape: </label>
-                <select id="shape" name="shape">
-                    <option value="oblong">Oblong</option>
-                    <option value="spherical">Spherical</option>
-                </select><br />
-                <label for="skin_color">Fruit Color: </label>
-                <select id="skin_color" name="skin_color">
-                    <option value="dull yellow">Dull yellow</option>
-                    <option value="bright green">Bright green</option>
-                    <option value="mixed">Mixed</option>
-                </select><br />
-                <label for="blemishes">Blemishes: </label>
-                <select id="blemishes" name="blemishes">
-                    <option value="present">Present</option>
-                    <option value="not present">Not present</option>
-                </select><br />
-                <label for="soil_type">Soil Type: </label>
-                <select id="soil_type" name="soil_type">
-                    <option value="loamy">Loamy</option>
-                    <option value="clayey">Clayey</option>
-                    <option value="sandy">Sandy</option>
-                </select><br />
-                <label for="sun_exposure">Sun Exposure: </label>
-                <select id="sun_exposure" name="sun_exposure">
-                    <option value="full shade">Full shade</option>
-                    <option value="partial shade">Partial shade</option>
-                    <option value="full sun">Full sun</option>
-                </select><br />
-                <label for="location">Location: </label>
-                <select id="location" name="location">
-                    <option value="patio">Patio</option>
-                    <option value="balcony">Balcony</option>
-                    <option value="rooftop">Rooftop</option>
-                </select><br />
-                <label for="fertilized">Fertilizer: </label>
-                <select id="fertilized" name="fertilized">
-                    <option value="not fertilized">Not Fertilized</option>
-                    <option value="fertilized">Fertilized</option>
-                </select><br />
-                <label for="watering_sched">Watering Schedule: </label>
-                <select id="watering_sched" name="watering_sched">
-                    <option value="regular">Regular</option>
-                    <option value="irregular">Irregular</option>
-                </select><br />
-                <label for="pruning">Pruning: </label>
-                <select id="pruning" name="pruning">
-                    <option value="regular">Regular</option>
-                    <option value="not regular">Irregular</option>
-                </select><br />
-                <label for="pest_presence">Pest Presence: </label>
-                <select id="pest_presence" name="pest_presence">
-                    <option value="yes">Present</option>
-                    <option value="no">Not present</option>
-                </select><br />
-                <button type="submit">Predict</button>
-            </form>
-            {/* {qualityId && predictedQuality && (
-            <table>
-              <thead>
-                <tr>
-                  <th>Quality ID</th>
-                  <th>Predicted Quality</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{qualityId}</td>
-                  <td>{predictedQuality}</td>
-                </tr>
-              </tbody>
-            </table>
-          )}
-          {error && <p>{error}</p>} */}
-            {error && <p>{error}</p>}
-            {/* {qualityData && qualityData.newQuality && (
-                <div>
-                    <h2>Predicted Quality</h2>
-                    <p>Quality ID: {qualityData.newQuality._id}</p>
-                    <p>Predicted Quality: {qualityData.newQuality.predicted_quality}</p>
+        <Fragment>
+            <div className="container">
+                <div className="row">
+                    <div className="col-md-12">
+                        <h1
+                            className="text-3xl font-bold text-center mt-5 mb-5 w-screen p-3"
+                            style={{
+                                color: "#58B741",
+                                fontFamily: "League Spartan",
+                                textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
+                            }}>Kalamansi Quality Prediction</h1>
+                        <div className="pl-56 pb-10">
+                            <form class="px-7 grid justify-center items-center" onSubmit={handleSubmit}>
+                                {/* Input fields for features */}
+                                <div class="grid gap-6" id="form" >
+                                    <div class="w-full flex gap-3">
+                                        <label className="form-control w-full max-w-m" for="size">
+                                            <div className="label">
+                                                <span className="label-text">Size: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="size" name="size">
+                                                <option disabled selected>Select size</option>
+                                                <option value="small">Small</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="big">Big</option>
+                                            </select>
+                                        </label>
+                                        <label className="form-control w-full max-w-m" for="firmness">
+                                            <div className="label">
+                                                <span className="label-text">Firmness: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="firmness" name="firmness">
+                                                <option disabled selected>Select size</option>
+                                                <option value="flabby">Flabby</option>
+                                                <option value="firm">Firm</option>
+                                            </select>
+                                        </label>
+                                        <label className="form-control w-full max-w-m" for="shape">
+                                            <div className="label">
+                                                <span className="label-text">Firmness: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="shape" name="shape">
+                                                <option disabled selected>Select size</option>
+                                                <option value="oblong">Oblong</option>
+                                                <option value="spherical">Spherical</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="grid gap-6" id="form">
+                                    <div class="w-full flex gap-3">
+                                        <label className="form-control w-full max-w-xs" for="skin_color">
+                                            <div className="label">
+                                                <span className="label-text">Fruit Color: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="skin_color" name="skin_color">
+                                                <option disabled selected>Select size</option>
+                                                <option value="dull yellow">Dull yellow</option>
+                                                <option value="bright green">Bright green</option>
+                                                <option value="mixed">Mixed</option>
+                                            </select>
+                                        </label>
+                                        <label className="form-control w-full max-w-xs" for="blemishes">
+                                            <div className="label">
+                                                <span className="label-text">Blemishes: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="blemishes" name="blemishes">
+                                                <option disabled selected>Select size</option>
+                                                <option value="present">Present</option>
+                                                <option value="not present">Not present</option>
+                                            </select>
+                                        </label>
+                                        <label className="form-control w-full max-w-xs" for="soil_type">
+                                            <div className="label">
+                                                <span className="label-text">Soil Type: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="soil_type" name="soil_type">
+                                                <option disabled selected>Select soil type</option>
+                                                <option value="loamy">Loamy</option>
+                                                <option value="clayey">Clayey</option>
+                                                <option value="sandy">Sandy</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="grid gap-6" id="form">
+                                    <div class="w-full flex gap-3">
+                                        <label className="form-control w-full max-w-xs" for="sun_exposure">
+                                            <div className="label">
+                                                <span className="label-text">Sun Exposure: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="sun_exposure" name="sun_exposure">
+                                                <option disabled selected>Select soil type</option>
+                                                <option value="full shade">Full shade</option>
+                                                <option value="partial shade">Partial shade</option>
+                                                <option value="full sun">Full sun</option>
+                                            </select>
+                                        </label>
+                                        <label className="form-control w-full max-w-xs" for="location">
+                                            <div className="label">
+                                                <span className="label-text">Location: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="location" name="location">
+                                                <option disabled selected>Select soil type</option>
+                                                <option value="patio">Patio</option>
+                                                <option value="balcony">Balcony</option>
+                                                <option value="rooftop">Rooftop</option>
+                                            </select>
+                                        </label>
+                                        <label className="form-control w-full max-w-xs" for="fertilized">
+                                            <div className="label">
+                                                <span className="label-text">Fertilizer: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="fertilized" name="fertilized">
+                                                <option disabled selected>Select soil type</option>
+                                                <option value="not fertilized">Not Fertilized</option>
+                                                <option value="fertilized">Fertilized</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="grid gap-6" id="form">
+                                    <div class="w-full flex gap-3">
+                                        <label className="form-control w-full max-w-xs" for="watering_sched">
+                                            <div className="label">
+                                                <span className="label-text">Watering Schedule: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="watering_sched" name="watering_sched">
+                                                <option disabled selected>Select soil type</option>
+                                                <option value="regular">Regular</option>
+                                                <option value="irregular">Irregular</option>
+                                            </select>
+                                        </label>
+                                        <label className="form-control w-full max-w-xs" for="pruning">
+                                            <div className="label">
+                                                <span className="label-text">Pruning: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="pruning" name="pruning">
+                                                <option disabled selected>Select soil type</option>
+                                                <option value="regular">Regular</option>
+                                                <option value="not regular">Irregular</option>
+                                            </select>
+                                        </label>
+                                        <label className="form-control w-full max-w-xs" for="pest_presence">
+                                            <div className="label">
+                                                <span className="label-text">Pest Presence: </span>
+                                            </div>
+                                            <select className="select select-bordered" id="pest_presence" name="pest_presence">
+                                                <option disabled selected>Select soil type</option>
+                                                <option value="yes">Present</option>
+                                                <option value="no">Not present</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <button class="outline-none glass shadow-xl w-20 items-center p-3 mx-auto bg-[#ffffff42] hover:border-[#035ec5] hover:border-solid hover:border-[1px] hover:text-[#035ec5] font-bold"
+                                    type="submit">Predict</button>
+                            </form>
+                            {error && <p>{error}</p>}
+                        </div>
+                    </div>
                 </div>
-            )} */}
-        </div>
+            </div>
+        </Fragment>
     );
-}
+};
 
 export default PredictQuality;
